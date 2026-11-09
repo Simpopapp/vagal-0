@@ -1,80 +1,82 @@
 # Planejamento: app de estudo de idiomas por letras de música
 
+Letra **completa**, sem nenhuma concessão de experiência por preocupação com burocracia. E o centro do app passa a ser a **palavra**: a música é onde você a encontra, o **vocabulário** é onde ela é realmente estudada.
+
 ## A ideia
 
-Você digita o nome de uma música e o cantor do jeito que vier (errado, abreviado, com a ordem trocada) e o app entende qual música é, traz a letra original completa e deixa você estudar em cima dela. Toca numa palavra, entende o que ela significa ali. Toca numa frase, entende o que ela quer dizer de verdade. Tudo que você traduz vai se acumulando num vocabulário pessoal, organizado por música e por outras categorias, com formas de praticar essas palavras depois.
+Você digita música e cantor do jeito que vier. O app entende qual é, traz a letra inteira e você lê com a música em mente, marcando as palavras que não conhece. Cada uma vai para uma área própria de vocabulário, onde é estudada com uma profundidade que dicionário e tradutor nunca dão: o significado literal, o que ela quer dizer em cada contexto, e quais confusões evitar. Tradutor de letra já existe. Aqui a letra é a fonte e o produto é a palavra entendida por inteiro.
 
-O app tem três partes que se alimentam em sequência: **achar a música, ler e traduzir a letra, fixar o vocabulário**.
+Três partes em sequência: **achar a música → ler e marcar palavras → estudar no vocabulário**.
 
 ## Achar a música
 
-O ponto central é que a busca não é mecânica. A IA faz o papel de quem interpreta o que a pessoa quis dizer. "bohemian rapsody quen" vira Queen / Bohemian Rhapsody sem o usuário precisar acertar nada. O caminho é este:
+A busca é interpretada, não mecânica. "bohemian rapsody quen" vira Queen / Bohemian Rhapsody sem o usuário acertar nada.
 
-- A IA lê o texto bruto e deduz artista e música, com um grau de confiança e algumas alternativas prováveis.
-- Com isso, ela vai ao Vagalume (a grande biblioteca de letras) e encontra a música sozinha.
-- Se a busca direta falha, ela tenta variações do nome ou busca por trecho.
-- Quando há mais de uma candidata plausível (versão ao vivo, cover, artistas diferentes com a mesma música), a IA escolhe a mais provável olhando os resultados reais.
-- Se mesmo assim a dúvida for grande, o app não chuta: mostra 2 ou 3 opções em cards ("era essa?") e o usuário confirma com um toque.
-- A letra é devolvida limpa e bem formatada (estrofes separadas, refrão identificado, sem lixo de site).
+1. A IA deduz artista e música a partir do texto bruto, com grau de confiança e alternativas.
+2. Vai ao Vagalume e encontra a letra sozinha, tentando variações do nome ou busca por trecho se a direta falhar.
+3. Havendo mais de uma candidata (ao vivo, cover, artistas diferentes com a mesma música), escolhe a mais provável olhando os resultados reais.
+4. Se a dúvida persistir, mostra 2 ou 3 cards ("era essa?") em vez de chutar.
+5. Devolve a letra limpa e formatada (estrofes, refrões, sem lixo de site).
 
-Uma regra que vale como princípio: **a IA nunca escreve nem completa a letra**. Ela só interpreta, procura e escolhe. O texto exibido é sempre o que a fonte devolveu, porque letra gerada por IA inventa versos. Como letra é conteúdo com direitos autorais, vale dar crédito e link para a fonte na tela.
+A IA **nunca escreve nem completa a letra**: só interpreta, procura e escolhe. O texto exibido é o que a fonte devolveu. Músicas já buscadas ficam salvas.
 
-Músicas já buscadas ficam salvas, então a segunda abertura é instantânea.
+## Ler a letra: dois modos de toque
 
-## Ler a letra
+A tela principal é a letra inteira, em estrofes, confortável de ler. Tocar numa palavra faz uma de duas coisas, e o usuário alterna entre elas a qualquer momento, ali mesmo na tela:
 
-A tela principal é a letra completa, organizada por estrofes, pensada para leitura confortável. Dois gestos fazem o app funcionar:
+- **Modo card:** o toque abre o card da palavra na hora, gerado no momento, com esqueleto visual e preenchimento progressivo. Bom para explorar e entender enquanto lê.
+- **Modo coleta:** o toque só **marca** a palavra e segue. Nada abre, nenhum delay. O usuário percorre a música inteira selecionando tudo que não sabe, no ritmo da leitura. As palavras vão para o vocabulário e os cards são gerados **em segundo plano**, em fila, com indicador discreto de progresso (ex.: "7 de 12 prontas").
 
-- **Tocar numa palavra** abre o card de palavra.
-- **Tocar numa frase (linha)** abre o card de frase.
+Um não substitui o outro. No modo coleta, tocar numa palavra já marcada abre o card dela, e no modo card dá para mandar a palavra ao vocabulário com um gesto. Ao terminar a música, o app pode mostrar um resumo: "você coletou 14 palavras, 9 já prontas".
 
-As traduções são geradas no momento do toque, não antes. O card abre rápido, com esqueleto visual, e vai se preenchendo.
+## Identificar o que o usuário não sabe
 
-### Card de palavra
+Esse é o coração do recurso, porque define a qualidade do vocabulário:
 
-Tem 3 tipos de tradução, cada um com identidade visual própria (cor e ícone):
+- **Nível declarado** no começo, usado como régua de base.
+- **Palavras comuns demais** para o nível (artigos, verbos básicos) não são sugeridas.
+- **Pré-marcação na letra:** a IA destaca de forma sutil as palavras "provavelmente novas para você", e o usuário confirma ou ignora. Em vez de caçar palavra por palavra, ele revisa.
+- **Memória do que já sabe:** palavra descartada, ou já dominada na prática, deixa de ser sugerida em músicas futuras.
+- **A mesma palavra com outro sentido** em outra música é reconhecida e ligada à que já existe no vocabulário, em vez de duplicada.
 
-1. **Tipo na frase** — o que a palavra significa naquele contexto específico da letra.
-2. **Tipo geral** — os significados mais comuns da palavra fora dali.
-3. **Tipo "por que ao invés de"** — por que o compositor usou aquela palavra e não um sinônimo mais óbvio (nuance, registro, sonoridade).
+## O card da palavra
 
-### Card de frase
+Três tipos de tradução, cada um com cor e ícone próprios:
 
-- Tradução da frase inteira, com o sentido real (não palavra por palavra).
-- **Termos e expressões**: gírias, phrasal verbs, expressões idiomáticas e construções em que o sentido literal não se aplica. Cada item aparece em negrito, seguido da sua explicação (por que a tradução não é literal e o que ele realmente quer dizer). Só entram termos que realmente merecem explicação. Se a frase não tem nada assim, a lista simplesmente não aparece, em vez de forçar conteúdo.
+- **Literal:** o significado da palavra em si. Camada secundária.
+- **Na frase:** o que ela significa *naquele contexto* e por que foi usada ali. É o destaque do card.
+- **Por que ao invés de [sinônimo]:** a IA escolhe o sinônimo mais provável que o aprendiz tentaria usar e dá o veredito, sempre com uma linha de motivo:
+  - ✗ **errado**
+  - ✓ **certo**
+  - ◐ **MCNC** (certo, mas menos cabível nesse contexto)
 
-### Visual e experiência dos cards
+Abre como painel deslizante por baixo, sem cobrir a letra. Tudo que a IA devolve passa por formato estruturado e validado antes de aparecer.
 
-- Os cards abrem como painel deslizante por baixo (bottom sheet), sem cobrir a letra inteira, para o usuário não perder onde estava.
-- A hierarquia é: o que mais importa primeiro, detalhes depois.
-- Termos e expressões dentro do card podem ser tocados para irem direto ao vocabulário.
-- Tudo que a IA devolve passa por um formato estruturado e validado antes de aparecer, então a interface nunca mostra texto solto ou quebrado.
+## O vocabulário: a área principal
 
-## Vocabulário
+É a seção central do app, não um depósito. Cada palavra guarda o card completo, a frase da música e a música de origem, e ganha um **dossiê** que se aprofunda com o tempo, gerado sem pressa: usos mais comuns, combinações frequentes, registro (formal, informal, gíria), parecidas que confundem (inclusive falsos cognatos com o português) e o que evitar.
 
-Toda palavra traduzida entra no vocabulário guardando o card completo, a frase da letra e a música de origem. A organização tem várias portas de entrada:
+**Organização:** por música de origem, por categoria (classe gramatical, gíria/expressão, favoritas, difíceis, recém-coletadas), por frequência nas músicas que você ouve, e por estágio de aprendizado (nova, em estudo, dominada).
 
-- **Por música de origem** (a mais natural: "palavras que aprendi em X").
-- **Por categoria**: classe gramatical, gírias e expressões, favoritas, difíceis, recém-adicionadas.
-- **Por frequência**: palavras que aparecem repetidamente nas músicas que você estuda.
+**Prática**, pensada para a palavra ser *entendida* e não só reconhecida, então cada revisão cobra um ângulo diferente dela:
 
-## Prática
-
-A prática usa o material que o usuário já gerou, sem conteúdo genérico:
-
-- **Revisão espaçada**, com a frase original da letra como contexto, não a palavra solta.
-- **Lacunas na própria letra**: a música de onde a palavra veio, com a palavra removida.
-- **"Qual o significado nessa frase?"**, reaproveitando o tipo na frase.
-- **"Por que não usar esse sinônimo?"**, reaproveitando o tipo por que ao invés de.
-- Destaque para as palavras que o usuário mais erra.
+- Revisão espaçada, com a frase da música como contexto, não a palavra solta.
+- "Qual o significado nesse contexto?" (tipo *na frase*).
+- "Esse sinônimo cabe aqui?" (tipo *por que ao invés de*), com os três vereditos como alternativas.
+- Lacunas na letra da própria música de origem.
+- Escolher entre palavras parecidas que o usuário costuma confundir.
+- Reaparição: quando a palavra surge em outra música, o app avisa e mostra o novo uso ao lado do antigo, e isso conta como revisão.
+- Palavras que o usuário mais erra voltam com mais frequência e por ângulos diferentes.
 
 ## Sem internet
 
-As letras já abertas e todo o vocabulário continuam acessíveis offline, assim como os cards que já foram gerados antes. Traduções novas dependem de conexão; quando não há, o app avisa de forma discreta em vez de falhar.
+Letras já abertas, vocabulário e cards já gerados funcionam offline. Palavras marcadas sem conexão ficam em fila e ganham card quando a internet voltar.
 
 ## Decisões em aberto
 
-- A palavra vai automática para o vocabulário ou por botão "salvar"? (Inclinação: automática, com remoção fácil, para reduzir atrito.)
-- Idioma de origem e destino inicial (inglês → português?) e se o app já nasce multi-idioma.
-- O nível do usuário deve influenciar a profundidade dos cards?
-- Controle de custo da IA: como limitar chamadas sem prejudicar a fluidez (o cache ajuda bastante).
+- Idioma de origem e destino inicial (inglês → português?) e se já nasce multi-idioma.
+- Como o nível é definido: pergunta inicial, teste curto ou ajuste automático pelo uso.
+- Quanto do dossiê é gerado automaticamente e quanto só quando o usuário abre a palavra, para controlar custo de IA.
+- Se o veredito ✗/✓/◐ passa por uma checagem extra antes de ser salvo, já que ele vai ser revisado muitas vezes.
+
+Se estiver bom, sigo para os próximos pilares nesse mesmo tom.
