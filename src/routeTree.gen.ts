@@ -10,33 +10,102 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PracticeRouteImport } from './routes/practice'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as SongSongIdRouteImport } from './routes/song.$songId'
+import { Route as VocabularyIndexRouteImport } from './routes/vocabulary.index'
+import { Route as VocabularyWordIdRouteImport } from './routes/vocabulary.$wordId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PracticeRoute = PracticeRouteImport.update({
+  id: '/practice',
+  path: '/practice',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SongSongIdRoute = SongSongIdRouteImport.update({
+  id: '/song/$songId',
+  path: '/song/$songId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VocabularyIndexRoute = VocabularyIndexRouteImport.update({
+  id: '/vocabulary/',
+  path: '/vocabulary/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VocabularyWordIdRoute = VocabularyWordIdRouteImport.update({
+  id: '/vocabulary/$wordId',
+  path: '/vocabulary/$wordId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/practice': typeof PracticeRoute
+  '/settings': typeof SettingsRoute
+  '/song/$songId': typeof SongSongIdRoute
+  '/vocabulary/$wordId': typeof VocabularyWordIdRoute
+  '/vocabulary/': typeof VocabularyIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/practice': typeof PracticeRoute
+  '/settings': typeof SettingsRoute
+  '/song/$songId': typeof SongSongIdRoute
+  '/vocabulary/$wordId': typeof VocabularyWordIdRoute
+  '/vocabulary': typeof VocabularyIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/practice': typeof PracticeRoute
+  '/settings': typeof SettingsRoute
+  '/song/$songId': typeof SongSongIdRoute
+  '/vocabulary/$wordId': typeof VocabularyWordIdRoute
+  '/vocabulary/': typeof VocabularyIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/practice'
+    | '/settings'
+    | '/song/$songId'
+    | '/vocabulary/$wordId'
+    | '/vocabulary/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/practice'
+    | '/settings'
+    | '/song/$songId'
+    | '/vocabulary/$wordId'
+    | '/vocabulary'
+  id:
+    | '__root__'
+    | '/'
+    | '/practice'
+    | '/settings'
+    | '/song/$songId'
+    | '/vocabulary/$wordId'
+    | '/vocabulary/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  PracticeRoute: typeof PracticeRoute
+  SettingsRoute: typeof SettingsRoute
+  SongSongIdRoute: typeof SongSongIdRoute
+  VocabularyWordIdRoute: typeof VocabularyWordIdRoute
+  VocabularyIndexRoute: typeof VocabularyIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +117,51 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/practice': {
+      id: '/practice'
+      path: '/practice'
+      fullPath: '/practice'
+      preLoaderRoute: typeof PracticeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/song/$songId': {
+      id: '/song/$songId'
+      path: '/song/$songId'
+      fullPath: '/song/$songId'
+      preLoaderRoute: typeof SongSongIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vocabulary/': {
+      id: '/vocabulary/'
+      path: '/vocabulary'
+      fullPath: '/vocabulary/'
+      preLoaderRoute: typeof VocabularyIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vocabulary/$wordId': {
+      id: '/vocabulary/$wordId'
+      path: '/vocabulary/$wordId'
+      fullPath: '/vocabulary/$wordId'
+      preLoaderRoute: typeof VocabularyWordIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  PracticeRoute: PracticeRoute,
+  SettingsRoute: SettingsRoute,
+  SongSongIdRoute: SongSongIdRoute,
+  VocabularyWordIdRoute: VocabularyWordIdRoute,
+  VocabularyIndexRoute: VocabularyIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
