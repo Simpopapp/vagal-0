@@ -1,5 +1,6 @@
 import { generateCard } from "./ai.functions";
 import { buildLocalCard } from "./card-engine";
+import { providerRequest } from "./providers";
 import { failCard, getSnapshot, patchEntry, setCard } from "./store";
 
 /**
@@ -38,9 +39,14 @@ async function drain(): Promise<void> {
         continue;
       }
 
-      if (snapshot.settings.provider.kind !== "remote") {
-        // Sem provedor remoto: continua pendente, com o motivo declarado.
-        patchEntry(id, { cardState: "pending", cardNote: local.reason });
+      // Sem provedor usável no dispositivo: continua pendente, com o motivo declarado.
+      // (O ambiente do servidor ainda pode atender — por isso a fila não falha aqui.)
+      const provider = providerRequest(snapshot.settings.provider);
+      if (!provider) {
+        patchEntry(id, {
+          cardState: "pending",
+          cardNote: "sem provedor ativo — configure um provedor em Ajustes",
+        });
         continue;
       }
 
@@ -51,6 +57,7 @@ async function drain(): Promise<void> {
             norm: entry.lemma,
             phrase: entry.phrase,
             level: snapshot.settings.level,
+            provider,
           },
         });
         if (response.ok) setCard(id, response.card);

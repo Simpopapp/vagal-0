@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { buildLocalCard } from "../lib/card-engine";
 import { buildSession } from "../lib/practice";
+import { defaultProviderConfig } from "../lib/providers";
 import { editDistance, interpretQuery, normalizeQuery } from "../lib/search";
 import { initialSrs } from "../lib/srs";
 import type { AppState, VocabularyEntry } from "../lib/types";
@@ -105,7 +106,7 @@ describe("sessão de prática", () => {
     settings: {
       level: "b1",
       tapMode: "collect",
-      provider: { kind: "local", baseUrl: "", model: "" },
+      provider: defaultProviderConfig(),
     },
   };
 
