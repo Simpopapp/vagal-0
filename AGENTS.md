@@ -40,11 +40,17 @@ Can you help me with the following actions:
   snapshot constante no servidor. Nunca ler `window` em module scope.
 - Domínio em `src/lib/`: `types` (zod), `tokenize`, `lexicon` (curadoria EN→PT),
   `catalog` (3 letras originais), `level`, `srs`, `search`, `card-engine`,
-  `card-queue`, `practice`.
+  `card-queue`, `practice`, `providers` (catálogo + migração), `provider-http`
+  (adaptadores `openai`/`anthropic`/`google` puros).
 - Servidor: `src/lib/lyrics.functions.ts` (Vagalume, timeout 5s) e
-  `src/lib/ai.functions.ts` (provedor compatível com OpenAI; chave lida **dentro**
-  do handler em `AI_API_KEY`, modelo em `AI_MODEL`, base em `AI_BASE_URL`).
-  Sem chave, o app funciona com a curadoria local e marca o resto como `pending`.
+  `src/lib/ai.functions.ts`. Precedência do card/dossiê: curadoria local →
+  provedor do dispositivo (`settings.provider`, chave no `localStorage`) →
+  ambiente (`AI_API_KEY`, `AI_BASE_URL`, `AI_MODEL`, lidos **dentro** do handler)
+  → `pending`. `listProviderModels` e `testProvider` provam chave + modelo; a
+  chave nunca é logada nem vai em URL.
+- Ajustes: `src/components/provider-settings.tsx` (catálogo agrupado com grátis e
+  locais, listagem real de modelos, teste de conexão). Sem provedor, o app
+  funciona com a curadoria local e marca o resto como `pending`.
 - Rotas: `/` busca · `/song/$songId` leitura · `/vocabulary` · `/vocabulary/$wordId`
   dossiê · `/practice` · `/settings`. `routeTree.gen.ts` é gerado — nunca editar.
 - Porta: o app não fixa porta; o ambiente publica na 3000 (`PORT` + `vite dev`).
@@ -57,7 +63,9 @@ Can you help me with the following actions:
   passar antes de qualquer entrega (rodar dentro do container do compose).
 - Testes de domínio obrigatórios: `src/test/tokenize.test.ts`,
   `src/test/srs.test.ts`, `src/test/remix-domain.test.ts` (busca, motor local,
-  sessão de prática) — 25 testes no total.
+  sessão de prática), `src/test/providers.test.ts` (catálogo, saneamento de URL,
+  três adaptadores, erros, migração), `src/test/app-routing.test.tsx` — 56 testes
+  no total.
 - Fluxos a exercitar no preview: buscar → abrir letra → marcar em coleta → painel
   de card → envio ao vocabulário → filtros → dossiê → sessão de prática.
   O navegador de verificação tem o `localStorage` limpo entre chamadas: rode o

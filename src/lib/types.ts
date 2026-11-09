@@ -104,10 +104,55 @@ export type VocabularyEntry = {
 export const providerKindSchema = z.enum(["local", "remote"]);
 export type ProviderKind = z.infer<typeof providerKindSchema>;
 
+/** As três famílias de API que o app sabe falar. */
+export const providerAdapterSchema = z.enum(["openai", "anthropic", "google"]);
+export type ProviderAdapter = z.infer<typeof providerAdapterSchema>;
+
+/**
+ * Configuração de provedor do dispositivo.
+ * A chave vive aqui (localStorage) e só viaja por chamada até o servidor do app.
+ */
 export type ProviderConfig = {
   kind: ProviderKind;
+  providerId: string;
+  label: string;
+  adapter: ProviderAdapter;
   baseUrl: string;
   model: string;
+  apiKey: string;
+  free: boolean;
+  verifiedAt: number | null;
+};
+
+/** O que o servidor precisa receber para falar com um provedor. */
+export type ProviderRequest = {
+  providerId: string;
+  adapter: ProviderAdapter;
+  baseUrl: string;
+  model: string;
+  apiKey: string;
+};
+
+export type DiscoveredModel = { id: string; label: string; free: boolean };
+
+export const providerErrorCodeSchema = z.enum([
+  "auth",
+  "quota",
+  "not_found",
+  "rate_limit",
+  "network",
+  "timeout",
+  "bad_response",
+  "unsupported",
+  "invalid_input",
+]);
+export type ProviderErrorCode = z.infer<typeof providerErrorCodeSchema>;
+
+/** Erro de provedor com frase acionável em português. */
+export type ProviderError = {
+  code: ProviderErrorCode;
+  message: string;
+  status?: number;
 };
 
 export type Settings = {

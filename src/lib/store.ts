@@ -2,6 +2,7 @@ import { useEffect, useSyncExternalStore } from "react";
 
 import { categoryOf, lemmaOf } from "./lexicon";
 import { buildLocalCard } from "./card-engine";
+import { defaultProviderConfig, migrateProviderConfig } from "./providers";
 import { normalizeWord, phraseOf } from "./tokenize";
 import { initialSrs, schedule } from "./srs";
 import type {
@@ -26,7 +27,7 @@ export function emptyState(): AppState {
     settings: {
       level: "b1",
       tapMode: "collect",
-      provider: { kind: "local", baseUrl: "", model: "" },
+      provider: defaultProviderConfig(),
     },
   };
 }
@@ -66,10 +67,16 @@ export function hydrate(): void {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (!raw) return;
     const parsed = JSON.parse(raw) as Partial<AppState>;
+    const previousSettings = (parsed.settings ?? {}) as Partial<Settings>;
     state = {
       ...emptyState(),
       ...parsed,
-      settings: { ...emptyState().settings, ...(parsed.settings ?? {}) },
+      settings: {
+        ...emptyState().settings,
+        ...previousSettings,
+        // Migra o provedor salvo por versões anteriores sem perder a URL/modelo.
+        provider: migrateProviderConfig(previousSettings.provider),
+      },
     };
     emit();
   } catch (error) {

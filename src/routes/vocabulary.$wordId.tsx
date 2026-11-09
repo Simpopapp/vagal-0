@@ -7,6 +7,7 @@ import { Button } from "../components/ui/button";
 import { DossierView, PendingCard, WordCardView } from "../components/word-card-view";
 import { generateDossier } from "../lib/ai.functions";
 import { enqueueCard } from "../lib/card-queue";
+import { providerRequest } from "../lib/providers";
 import { formatDue } from "../lib/srs";
 import { setDossier, setStatus, toggleStar, useAppState, useStoreHydration } from "../lib/store";
 import type { WordStatus } from "../lib/types";
@@ -62,7 +63,12 @@ function WordPage() {
     setBusy(true);
     try {
       const response = await generateDossier({
-        data: { term: entry.term, norm: entry.lemma, level: state.settings.level },
+        data: {
+          term: entry.term,
+          norm: entry.lemma,
+          level: state.settings.level,
+          provider: providerRequest(state.settings.provider),
+        },
       });
       if (response.ok) {
         setDossier(entry.id, response.dossier);
